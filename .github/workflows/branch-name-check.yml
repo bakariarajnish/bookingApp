@@ -1,0 +1,22 @@
+name: Enforce branch naming
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate branch name
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          echo "Checking branch: $BRANCH_NAME"
+
+          if [[ ! "$BRANCH_NAME" =~ ^staging/.*-prd$ ]]; then
+            echo "❌ Branch name must match: staging/*-prd"
+            exit 1
+          fi
+
+          echo "✅ Branch name is valid"
